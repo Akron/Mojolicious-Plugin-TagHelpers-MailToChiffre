@@ -79,19 +79,19 @@ as once a bot has adapted the scheme and your parameters,
 parsing and deobfuscating is rather trivial.
 
 The plugin supports utf-8 domain names, utf-8 usernames
-and tries to be compatible with L<RFC2368 http://tools.ietf.org/html/rfc2368>,
+and tries to be compatible with L<RFC2368|http://tools.ietf.org/html/rfc2368>,
 including obfuscated C<to>, C<cc> and C<bcc> addresses.
 
 Please be aware of the environment you use email obfuscation in and
 make sure your human visitors will always be able to deobfuscate your address!
 And please keep in mind that it's arguable if email obfuscation is
-L<useful at all http://www.theguardian.com/technology/2010/dec/21/keeping-email-address-secret-spambots>.
+L<useful at all|http://www.theguardian.com/technology/2010/dec/21/keeping-email-address-secret-spambots>.
 
 
 =head2 Mailto Obfuscation
 
 The mailto obfuscation merely follows the basic principle of
-L<this alistapart.com article http://alistapart.com/article/gracefulemailobfuscation>.
+L<this alistapart.com article|http://alistapart.com/article/gracefulemailobfuscation>.
 The mailto-link is build using JavaScript with information stored in a harmless looking
 http-URL. Instead of a simple rot13 obfuscation, the obfuscation
 uses a XOR operation on a rotating public One Time Pad, a variable character shift,
@@ -115,7 +115,7 @@ otherwise it defaults to a random string.
 
 In case you want to make the email address visual,
 it is obfuscated using CSS with
-L<http://techblog.tilllate.com/2008/07/20/ten-methods-to-obfuscate-e-mail-addresses-compared/ reversed directionality> and non-displayed span segments.
+L<reversed directionality|http://techblog.tilllate.com/2008/07/20/ten-methods-to-obfuscate-e-mail-addresses-compared/> and non-displayed span segments.
 
 Although the left string tries to not leave too many hints of its email address nature,
 this obfuscation is obviously easier to deobfuscate than the javascript obfuscation,
@@ -168,7 +168,7 @@ as part of the configuration file with the key C<TagHelpers-MailToChiffre>.
 Creates an anchor link with the resulting obfuscated email address
 (i.e. the fallback path defined by the shortcut).
 Accepts an email address and further query parameters of the mailto-link
-as defined in L<RFC2368 http://tools.ietf.org/html/rfc2368>.
+as defined in L<RFC2368|http://tools.ietf.org/html/rfc2368>.
 Multiple values can be denoted using an array reference (e.g. C<to> and C<cc>).
 C<to>, C<cc> and C<bcc> links are obfuscated, too.
 
