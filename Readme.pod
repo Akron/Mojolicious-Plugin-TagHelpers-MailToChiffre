@@ -134,7 +134,7 @@ L<Mojolicious::Plugin> and implements the following new ones.
   $app->plugin('TagHelpers::MailToChiffre');
 
   # Mojolicious::Lite
-  plugin 'Util::Endpoint' => {
+  plugin 'TagHelpers::MailToChiffre' => {
     method_name => 'deobfuscate',
     pattern_rotate => 720
   };
@@ -181,7 +181,7 @@ otherwise the first email address is used obfuscated as the link text.
   # In Templates
   <%= stylesheet begin %><%= mail_to_chiffre_css %><% end %>
 
-  Returns the deobfuscating CSS code.
+Returns the deobfuscating CSS code.
 
 
 =head2 mail_to_chiffre_js
@@ -189,7 +189,7 @@ otherwise the first email address is used obfuscated as the link text.
   # In Templates
   <%= javascript begin %><%= mail_to_chiffre_js %><% end %>
 
-  Returns the deobfuscating JavaScript code.
+Returns the deobfuscating JavaScript code.
 
 
 =head1 SHORTCUTS
@@ -212,7 +212,7 @@ otherwise the first email address is used obfuscated as the link text.
 Define the URL prefix for the obfuscated anchor link,
 which also serves as the fallback path for users without
 JavaScript.
-Accepts all parameters of L<Mojolicious::Routes::Route#to>.
+Accepts all parameters of L<Mojolicious::Routes::Route/to>.
 The plain mailto-link is present as a L<Mojo::URL> in the stash
 value C<mail_to_chiffre>.
 
@@ -233,7 +233,7 @@ files (in case they are external) may have to be updated.
 =head1 DEPENDENCIES
 
 L<Mojolicious>,
-L<Mojolicious::Plugin::Util::RandomString>,
+L<Mojolicious::Plugin::Util::RandomString>.
 
 
 =head1 AVAILABILITY
