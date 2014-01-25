@@ -1,0 +1,7 @@
+lib/Mojolicious/Plugin/TagHelpers/MailToChiffre.pm
+t/mailtochiffre.t
+t/mailtochiffre_no_fallback.t
+Changes
+MANIFEST
+LICENSE
+Makefile.PL
