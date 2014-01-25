@@ -79,19 +79,19 @@ as once a bot has adapted the scheme and your parameters,
 parsing and deobfuscating is rather trivial.
 
 The plugin supports utf-8 domain names, utf-8 usernames
-and tries to be compatible with L<http://tools.ietf.org/html/rfc2368 RFC2368>,
+and tries to be compatible with L<RFC2368 http://tools.ietf.org/html/rfc2368>,
 including obfuscated C<to>, C<cc> and C<bcc> addresses.
 
 Please be aware of the environment you use email obfuscation in and
 make sure your human visitors will always be able to deobfuscate your address!
 And please keep in mind that it's arguable if email obfuscation is
-L<http://www.theguardian.com/technology/2010/dec/21/keeping-email-address-secret-spambots useful at all>.
+L<useful at all http://www.theguardian.com/technology/2010/dec/21/keeping-email-address-secret-spambots>.
 
 
 =head2 Mailto Obfuscation
 
 The mailto obfuscation merely follows the basic principle of
-L<http://alistapart.com/article/gracefulemailobfuscation this alistapart.com article>.
+L<this alistapart.com article http://alistapart.com/article/gracefulemailobfuscation>.
 The mailto-link is build using JavaScript with information stored in a harmless looking
 http-URL. Instead of a simple rot13 obfuscation, the obfuscation
 uses a XOR operation on a rotating public One Time Pad, a variable character shift,
@@ -168,7 +168,7 @@ as part of the configuration file with the key C<TagHelpers-MailToChiffre>.
 Creates an anchor link with the resulting obfuscated email address
 (i.e. the fallback path defined by the shortcut).
 Accepts an email address and further query parameters of the mailto-link
-as defined in L<http://tools.ietf.org/html/rfc2368 RFC2368>.
+as defined in L<RFC2368 http://tools.ietf.org/html/rfc2368>.
 Multiple values can be denoted using an array reference (e.g. C<to> and C<cc>).
 C<to>, C<cc> and C<bcc> links are obfuscated, too.
 
@@ -232,7 +232,7 @@ files (in case they are external) may have to be updated.
 
 =head1 DEPENDENCIES
 
-L<Mojolicious> (best with SSL support),
+L<Mojolicious>,
 L<Mojolicious::Plugin::Util::RandomString>,
 
 
