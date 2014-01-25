@@ -1,0 +1,251 @@
+=pod
+
+=encoding utf8
+
+=head1 NAME
+
+Mojolicious::Plugin::TagHelpers::MailToChiffre - Obfuscate Email Addresses in Templates
+
+=head1 SYNOPSIS
+
+  use Mojolicious::Lite;
+
+  plugin 'TagHelpers::MailToChiffre' => {
+    pattern_rotate => 720
+  };
+
+  # Path to index page
+  get '/' => 'index';
+
+  # Add fallback for non-JavaScript users
+  get('/contactme')->mail_to_chiffre(cb => sub {
+    my $c = shift;
+    $c->render(text => 'You tried to ' . $c->stash('mail_to_chiffre')->to_string);
+  });
+
+  app->start;
+
+  __DATA__
+  @@ layouts/default.html.ep
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title><%= title %></title>
+      %# Add javascript and stylesheet information
+      <%= javascript begin %><%= mail_to_chiffre_js %><% end %>
+      <%= stylesheet begin %><%= mail_to_chiffre_css %><% end %>
+    </head>
+    <body><%= content %></body>
+  </html>
+
+  @@ index.html.ep
+  % layout 'default', title => 'Welcome';
+  <p>
+    Mail me at <%= mail_to_chiffre 'akron@sojolicio.us', subject => 'Hi!' %>
+    or
+    <%= mail_to_chiffre 'test@sojolicio.us', begin %>Write me<% end %>
+  </p>
+
+
+=head1 DESCRIPTION
+
+L<Mojolicious::Plugin::TagHelpers::MailToChiffre> is a L<Mojolicious> plugin
+helping you to obfuscate email adresses visible on your website
+to make it less easy for spam bots to grab them.
+
+It uses JavaScript to obfuscate mailto-links (while providing
+a fallback option for users without JavaScript)
+and in case you want to show the email
+address in plain text it is obfuscated using CSS.
+
+Although modern spam bots may be capable of parsing and executing
+JavaScript and interpreting CSS, it is more likely,
+that they don't try to do it, as it takes time and power
+better be invested in sites with less protected emails.
+This is just my assumption for the moment - it may not held entirely true.
+
+The idea is to make the obfuscation easy for modern browser
+and expensive for spam bots, by making it necessary to parse
+and execute CSS and JavaScript without giving too much hints,
+that this is necessary to deobfuscate email addresses
+(i.e. not creating too obvious patterns for the obfuscation,
+so in case a spambot programmer knows this scheme it is
+more expensive to search for than simply scan for an email pattern
+using a regular expression).
+
+This plugin is not useful for obfuscating millions
+of email addresses on your site,
+as once a bot has adapted the scheme and your parameters,
+parsing and deobfuscating is rather trivial.
+
+The plugin supports utf-8 domain names, utf-8 usernames
+and tries to be compatible with L<http://tools.ietf.org/html/rfc2368 RFC2368>,
+including obfuscated C<to>, C<cc> and C<bcc> addresses.
+
+Please be aware of the environment you use email obfuscation in and
+make sure your human visitors will always be able to deobfuscate your address!
+And please keep in mind that it's arguable if email obfuscation is
+L<http://www.theguardian.com/technology/2010/dec/21/keeping-email-address-secret-spambots useful at all>.
+
+
+=head2 Mailto Obfuscation
+
+The mailto obfuscation merely follows the basic principle of
+L<http://alistapart.com/article/gracefulemailobfuscation this alistapart.com article>.
+The mailto-link is build using JavaScript with information stored in a harmless looking
+http-URL. Instead of a simple rot13 obfuscation, the obfuscation
+uses a XOR operation on a rotating public One Time Pad, a variable character shift,
+and afterwards applys an ASCII encoding scheme on the result
+(similar to base64; currently using rot13 for alphanumericals and a cheap ordinal
+number print for all other characters - a scheme likely to be changed).
+
+Using the One Time Pad guarantees that all email addresses look different
+each time they are obfuscated to make it harder to leave a simple pattern
+for finding these strings (especially the recurring domain part).
+
+The character shift with a variable number of characters makes it necessary
+to parse the JavaScript, even if the spambot knows the scheme and the
+obfuscated URL.
+
+The JavaScript method name can be set manually,
+otherwise it defaults to a random string.
+
+
+=head2 Display Obfuscation
+
+In case you want to make the email address visual,
+it is obfuscated using CSS with
+L<http://techblog.tilllate.com/2008/07/20/ten-methods-to-obfuscate-e-mail-addresses-compared/ reversed directionality> and non-displayed span segments.
+
+Although the left string tries to not leave too many hints of its email address nature,
+this obfuscation is obviously easier to deobfuscate than the javascript obfuscation,
+i.e. less protected.
+
+
+=head1 METHODS
+
+L<Mojolicious::Plugin::TagHelpers::MailToChiffre> inherits all methods from
+L<Mojolicious::Plugin> and implements the following new ones.
+
+
+=head2 register
+
+  # Mojolicious
+  $app->plugin('TagHelpers::MailToChiffre');
+
+  # Mojolicious::Lite
+  plugin 'Util::Endpoint' => {
+    method_name => 'deobfuscate',
+    pattern_rotate => 720
+  };
+
+Called when registering the plugin.
+Accepts the attributes C<method_name> and C<pattern_rotate>.
+
+The C<method_name> is the name of the JavaScript function called to deobfuscate
+your email addresses. It defaults to a random string.
+The C<pattern_rotate> numeral value will rotate the characters ob the obfuscated
+email address and is stored directly in the javascript.
+It default to C<2>.
+In case both parameters are set, the resulting JavaScript and
+CSS can be used in external files or directly in your Asset Pipeline.
+
+All parameters can be set either on registration or
+as part of the configuration file with the key C<TagHelpers-MailToChiffre>.
+
+
+=head1 HELPERS
+
+=head2 mail_to_chiffre
+
+  # In Templates
+  <%= mail_to_chiffre 'akron@sojolicio.us', subject => 'Hello!' %>
+  <%= mail_to_chiffre 'akron@sojolicio.us', cc => 'metoo@sojolicio.us' %>
+  %= mail_to_chiffre 'akron@sojolicio.us' => begin
+    <img src="mailme.gif" />
+  % end
+
+Creates an anchor link with the resulting obfuscated email address
+(i.e. the fallback path defined by the shortcut).
+Accepts an email address and further query parameters of the mailto-link
+as defined in L<http://tools.ietf.org/html/rfc2368 RFC2368>.
+Multiple values can be denoted using an array reference (e.g. C<to> and C<cc>).
+C<to>, C<cc> and C<bcc> links are obfuscated, too.
+
+In case the helper embeds further HTML, this is used for the link content,
+otherwise the first email address is used obfuscated as the link text.
+
+
+=head2 mail_to_chiffre_css
+
+  # In Templates
+  <%= stylesheet begin %><%= mail_to_chiffre_css %><% end %>
+
+  Returns the deobfuscating CSS code.
+
+
+=head2 mail_to_chiffre_js
+
+  # In Templates
+  <%= javascript begin %><%= mail_to_chiffre_js %><% end %>
+
+  Returns the deobfuscating JavaScript code.
+
+
+=head1 SHORTCUTS
+
+=head2 mail_to_chiffre
+
+  # Mojolicious
+  my $r = $app->routes;
+  $r->route('/contactme')->mail_to_chiffre('Mail#capture');
+
+  # Mojolicious::Lite
+  any('/contactme')->mail_to_chiffre(
+    cb => sub {
+      # ...
+      # The plain mailto-link is as a Mojo::URL object
+      # stored in the stash value 'mail_to_chiffre'
+    }
+  );
+
+Define the URL prefix for the obfuscated anchor link,
+which also serves as the fallback path for users without
+JavaScript.
+Accepts all parameters of L<Mojolicious::Routes::Route#to>.
+The plain mailto-link is present as a L<Mojo::URL> in the stash
+value C<mail_to_chiffre>.
+
+You can present a security question or a capture before you relocate
+the user to the deobfuscated mailto-link, or you may provide an
+email form instead.
+
+The fallback response will contain a header to ban search engines.
+
+
+=head1 KNOWN BUGS AND LIMITATIONS
+
+This plugin works best in a demon environment (and worse in a CGI environment).
+The output may change in further versions, which means the CSS and JavaScript
+files (in case they are external) may have to be updated.
+
+
+=head1 DEPENDENCIES
+
+L<Mojolicious> (best with SSL support),
+L<Mojolicious::Plugin::Util::RandomString>,
+
+
+=head1 AVAILABILITY
+
+  https://github.com/Akron/Mojolicious-Plugin-TagHelpers-MailToChiffre
+
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2014, Nils Diewald.
+
+This program is free software, you can redistribute it
+and/or modify it under the same terms as Perl.
+
+=cut
