@@ -4,7 +4,7 @@ use Mojo::ByteStream 'b';
 use Mojo::Collection 'c';
 use Mojo::URL;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 # Cache for generated CSS and JavaScript
 has [qw/js css/];
