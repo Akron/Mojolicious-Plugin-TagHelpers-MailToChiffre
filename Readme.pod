@@ -20,6 +20,7 @@ Mojolicious::Plugin::TagHelpers::MailToChiffre - Obfuscate Email Addresses in Te
   # Add fallback for non-JavaScript users
   get('/contactme')->mail_to_chiffre(cb => sub {
     my $c = shift;
+    # Of course - don't display it this way:
     $c->render(text => 'You tried to ' . $c->stash('mail_to_chiffre')->to_string);
   });
 
@@ -57,13 +58,11 @@ It uses JavaScript to obfuscate mailto-links (while providing
 a fallback option for users without JavaScript)
 and in case you want to show the email
 address in plain text it is obfuscated using CSS.
-
 Although modern spam bots may be capable of parsing and executing
 JavaScript and interpreting CSS, it is more likely,
 that they don't try to do it, as it takes time and power
 better be invested in sites with less protected emails.
 This is just my assumption for the moment - it may not held entirely true.
-
 The idea is to make the obfuscation easy for modern browser
 and expensive for spam bots, by making it necessary to parse
 and execute CSS and JavaScript without giving too much hints,
@@ -144,7 +143,7 @@ Accepts the attributes C<method_name> and C<pattern_rotate>.
 
 The C<method_name> is the name of the JavaScript function called to deobfuscate
 your email addresses. It defaults to a random string.
-The C<pattern_rotate> numeral value will rotate the characters ob the obfuscated
+The C<pattern_rotate> numeral value will rotate the characters of the obfuscated
 email address and is stored directly in the javascript.
 It default to C<2>.
 In case both parameters are set, the resulting JavaScript and
@@ -175,6 +174,30 @@ C<to>, C<cc> and C<bcc> links are obfuscated, too.
 In case the helper embeds further HTML, this is used for the link content,
 otherwise the first email address is used obfuscated as the link text.
 
+In case no email address is passed to the C<mail_to_chiffre> method, an assets
+object is returned, bundling all style and script assets (in case a fixed method name
+was provided on registration) for use in the
+L<AssetPack|Mojolicious::Plugin::AssetPack> pipeline.
+The assets object provides to methods, C<scripts> and C<styles>.
+
+  # Register MailToChiffre plugin
+  plugin 'TagHelpers::MailToChiffre' => {
+    method_name => 'deobfuscate'
+  };
+
+  # Register AssetPack plugin
+  plugin 'AssetPack';
+
+  # Add MailToChiffre assets to pipeline
+  app->asset('myApp.js'  => 'myscripts.coffee', app->mail_to_chiffre->scripts);
+  app->asset('myApp.css' => 'mystyles.scss', app->mail_to_chiffre->styles);
+
+  %# In templates embed assets ...
+  %= asset 'myApp.js'
+  %= asset 'myApp.css'
+
+B<The asset helper option is experimental and may change without warnings!>
+
 
 =head2 mail_to_chiffre_css
 
@@ -198,7 +221,7 @@ Returns the deobfuscating JavaScript code.
 
   # Mojolicious
   my $r = $app->routes;
-  $r->route('/contactme')->mail_to_chiffre('Mail#capture');
+  $r->get('/contactme')->mail_to_chiffre('Mail#capture');
 
   # Mojolicious::Lite
   any('/contactme')->mail_to_chiffre(
