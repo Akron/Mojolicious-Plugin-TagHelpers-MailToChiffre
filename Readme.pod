@@ -185,6 +185,9 @@ The assets object provides to methods, C<scripts> and C<styles>.
     method_name => 'deobfuscate'
   };
 
+  # Define shortcut
+  get('/mails')->mail_to_chiffre('Mail#capture');
+
   # Register AssetPack plugin
   plugin 'AssetPack';
 
