@@ -146,8 +146,6 @@ your email addresses. It defaults to a random string.
 The C<pattern_rotate> numeral value will rotate the characters of the obfuscated
 email address and is stored directly in the javascript.
 It default to C<2>.
-In case both parameters are set, the resulting JavaScript and
-CSS can be used in external files or directly in your Asset Pipeline.
 
 All parameters can be set either on registration or
 as part of the configuration file with the key C<TagHelpers-MailToChiffre>.
@@ -173,33 +171,6 @@ C<to>, C<cc> and C<bcc> links are obfuscated, too.
 
 In case the helper embeds further HTML, this is used for the link content,
 otherwise the first email address is used obfuscated as the link text.
-
-In case no email address is passed to the C<mail_to_chiffre> method, an assets
-object is returned, bundling all style and script assets (in case a fixed method name
-was provided on registration) for use in the
-L<AssetPack|Mojolicious::Plugin::AssetPack> pipeline.
-The assets object provides to methods, C<scripts> and C<styles>.
-
-  # Register MailToChiffre plugin
-  plugin 'TagHelpers::MailToChiffre' => {
-    method_name => 'deobfuscate'
-  };
-
-  # Define shortcut
-  get('/mails')->mail_to_chiffre('Mail#capture');
-
-  # Register AssetPack plugin
-  plugin 'AssetPack';
-
-  # Add MailToChiffre assets to pipeline
-  app->asset('myApp.js'  => 'myscripts.coffee', app->mail_to_chiffre->scripts);
-  app->asset('myApp.css' => 'mystyles.scss', app->mail_to_chiffre->styles);
-
-  %# In templates embed assets ...
-  %= asset 'myApp.js'
-  %= asset 'myApp.css'
-
-B<The asset helper option is experimental and may change without warnings!>
 
 
 =head2 mail_to_chiffre_css
