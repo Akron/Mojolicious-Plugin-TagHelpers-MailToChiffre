@@ -4,7 +4,7 @@ use Mojo::ByteStream 'b';
 use Mojo::Collection 'c';
 use Mojo::URL;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 # Cache for generated CSS and JavaScript
 has [qw/js css pattern_rotate/];
@@ -106,7 +106,8 @@ sub register {
       # Split the address and do some encodings
       my $obf_address = b($address)->xml_escape->split('@');
       my $account = $obf_address->first;
-      my $host = $obf_address->slice(1 .. $obf_address->size - 1)->join('@');
+
+      my $host = join '@', @{$obf_address}[1 .. $obf_address->size - 1];
 
       # Reget the pattern rotate (maybe)
       my $pattern_rotate = $plugin->pattern_rotate;
@@ -722,7 +723,7 @@ L<Mojolicious::Plugin::Util::RandomString>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2014-2018, Nils Diewald.
+Copyright (C) 2014-2019, Nils Diewald.
 
 This program is free software, you can redistribute it
 and/or modify it under the same terms as Perl.

@@ -195,7 +195,7 @@ Returns the deobfuscating JavaScript code.
 
   # Mojolicious
   my $r = $app->routes;
-  $r->get('/contactme')->mail_to_chiffre('Mail#capture');
+  $r->any('/contactme')->mail_to_chiffre('Mail#capture');
 
   # Mojolicious::Lite
   any('/contactme')->mail_to_chiffre(
@@ -240,7 +240,7 @@ L<Mojolicious::Plugin::Util::RandomString>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2014, Nils Diewald.
+Copyright (C) 2014-2019, Nils Diewald.
 
 This program is free software, you can redistribute it
 and/or modify it under the same terms as Perl.
