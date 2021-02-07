@@ -1,4 +1,5 @@
-0.11 2020-09-13
+0.11 2021-02-07
+        - Move bugtracker to GitHub.
 
 0.10 2019-07-04
         - Removed call to deprecated
