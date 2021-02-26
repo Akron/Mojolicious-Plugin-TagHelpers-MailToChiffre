@@ -4,7 +4,7 @@ use Mojo::ByteStream 'b';
 use Mojo::Collection 'c';
 use Mojo::URL;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 # Cache for generated CSS and JavaScript
 has [qw/js css pattern_rotate/];
@@ -525,9 +525,9 @@ Mojolicious::Plugin::TagHelpers::MailToChiffre - Obfuscate Email Addresses in Te
   @@ index.html.ep
   % layout 'default', title => 'Welcome';
   <p>
-    Mail me at <%= mail_to_chiffre 'akron@sojolicio.us', subject => 'Hi!' %>
+    Mail me at <%= mail_to_chiffre 'akron@sojolicious.example', subject => 'Hi!' %>
     or
-    <%= mail_to_chiffre 'test@sojolicio.us', begin %>Write me<% end %>
+    <%= mail_to_chiffre 'test@sojolicious.example', begin %>Write me<% end %>
   </p>
 
 
@@ -642,9 +642,9 @@ as part of the configuration file with the key C<TagHelpers-MailToChiffre>.
 =head2 mail_to_chiffre
 
   # In Templates
-  <%= mail_to_chiffre 'akron@sojolicio.us', subject => 'Hello!' %>
-  <%= mail_to_chiffre 'akron@sojolicio.us', cc => 'metoo@sojolicio.us' %>
-  %= mail_to_chiffre 'akron@sojolicio.us' => begin
+  <%= mail_to_chiffre 'akron@sojolicious.example', subject => 'Hello!' %>
+  <%= mail_to_chiffre 'akron@sojolicious.example', cc => 'metoo@sojolicious.example' %>
+  %= mail_to_chiffre 'akron@sojolicious.example' => begin
     <img src="mailme.gif" />
   % end
 
