@@ -117,7 +117,8 @@ otherwise it defaults to a random string.
 
 In case you want to make the email address visual,
 it is obfuscated using CSS with
-L<reversed directionality|http://techblog.tilllate.com/2008/07/20/ten-methods-to-obfuscate-e-mail-addresses-compared/> and non-displayed span segments.
+L<reversed directionality|http://techblog.tilllate.com/2008/07/20/ten-methods-to-obfuscate-e-mail-addresses-compared/>
+and non-displayed span segments.
 
 Although the left string tries to not leave too many hints of its email address nature,
 this obfuscation is obviously easier to deobfuscate than the javascript obfuscation,
@@ -149,6 +150,9 @@ your email addresses. It defaults to a random string.
 The C<pattern_rotate> numeral value will rotate the characters of the obfuscated
 email address and is stored directly in the javascript.
 It default to C<2>.
+The C<no_inline> removes the C<onclick> parameter from the L</mail_to_chiffre>
+link and establishes an eventhandler on all L</mail_to_chiffre> links on a single page.
+This is required to make the helper compliant to C<Content Security Policy>.
 
 All parameters can be set either on registration or
 as part of the configuration file with the key C<TagHelpers-MailToChiffre>.

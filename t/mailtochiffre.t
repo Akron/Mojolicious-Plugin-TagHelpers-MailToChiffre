@@ -162,6 +162,37 @@ unlike($failed_cc, qr/[\?&]cc=/,    'No cc 4');
 like($failed_cc, qr/[\?&]subject=/, 'No cc 5');
 like($failed_cc, qr/norka/,     'No cc 6');
 
+
+# New start
+$app = Mojolicious->new;
+$t = Test::Mojo->new;
+$t->app($app);
+
+$method_name = 'cspCompliant';
+
+$app->plugin('TagHelpers::MailToChiffre' => {
+  pattern_rotate => 9,
+  method_name => $method_name,
+  no_inline => 1
+});
+
+$css = $app->mail_to_chiffre_css;
+ok($css !~ m/^a\[onclick\$='return $method_name\(this,false\)'/, 'css is as expected');
+ok($css =~ m/^a\.$method_name/, 'css is as expected');
+
+$js = $app->mail_to_chiffre_js;
+like($js, qr/^function $method_name\(/, 'js is as expected');
+like($js, qr/\(3,2\)/, 'pattern shift is as expected');
+like($js, qr/DOMContentLoaded/, 'Load on event');
+
+my $tag = $app->mail_to_chiffre('me@sojolicious.example');
+like($tag, qr!data-href!);
+like($tag, qr!href="#"!);
+like($tag, qr!class="$method_name"!);
+unlike($tag, qr!onclick|javascript!);
+
+
+
 done_testing;
 
 __END__
