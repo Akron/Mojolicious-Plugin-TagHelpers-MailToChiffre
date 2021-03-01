@@ -4,7 +4,7 @@ use Mojo::ByteStream 'b';
 use Mojo::Collection 'c';
 use Mojo::URL;
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 # Cache for generated CSS and JavaScript
 has [qw/js css pattern_rotate/];
@@ -217,7 +217,10 @@ sub register {
           c(@post)->join->xml_escape;
       }
       else {
-        $str .= ';' . int(rand(50)) . '">' . $text->();
+        unless ($plugin->{no_inline}) {
+          $str .= ';' . int(rand(50));
+        };
+        $str .= '">' . $text->();
       };
 
       $str .= '</a>';

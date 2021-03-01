@@ -191,6 +191,12 @@ like($tag, qr!href="#"!);
 like($tag, qr!class="$method_name"!);
 unlike($tag, qr!onclick|javascript!);
 
+$tag = $app->mail_to_chiffre('me@sojolicious.example' => sub { return 'okay' });
+like($tag, qr!data-href!);
+like($tag, qr!href="#"!);
+like($tag, qr!class="$method_name"!);
+unlike($tag, qr!onclick|javascript!);
+
 
 
 done_testing;

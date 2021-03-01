@@ -1,3 +1,6 @@
+0.13 2021-03-01
+        - Fix class name for no_inline tags with textual content.
+
 0.12 2021-02-26
         - Replaced sojolicio.us with sojolicious.example.
         - Support CSP compliance option.
