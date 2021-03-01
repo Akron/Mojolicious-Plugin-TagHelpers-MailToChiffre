@@ -184,6 +184,7 @@ $js = $app->mail_to_chiffre_js;
 like($js, qr/^function $method_name\(/, 'js is as expected');
 like($js, qr/\(3,2\)/, 'pattern shift is as expected');
 like($js, qr/DOMContentLoaded/, 'Load on event');
+like($js, qr!this\.href=='#'\?this\.getAttribute\('data-href'\):this\.href!);
 
 my $tag = $app->mail_to_chiffre('me@sojolicious.example');
 like($tag, qr!data-href!);

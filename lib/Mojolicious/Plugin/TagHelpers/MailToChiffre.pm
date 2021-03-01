@@ -325,7 +325,7 @@ sub register {
       i=>i.addEventListener(
         "click",function(e){
           e.preventDefault();
-          ${method_name}(false,this.href=='#'?this.href:this.getAttribute('data-href'))
+          ${method_name}(false,this.href=='#'?this.getAttribute('data-href'):this.href)
         }
       )
     )
